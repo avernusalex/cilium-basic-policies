@@ -1,0 +1,25 @@
+# Allows access from hubble observe from cluster hosts
+# Grants access from relat to ui
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hubble-relay.ingress.from.local.hubble-ui
+  namespace: cilium-ns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:k8s-app: hubble-relay
+  ingress:
+    - fromEntities: # Hubble observe from cluster hosts
+        - remote-node
+        - host
+      toPorts:
+        - ports:
+            - port: "4245"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:k8s-app: hubble-ui
+      toPorts:
+        - ports:
+            - port: "4245"

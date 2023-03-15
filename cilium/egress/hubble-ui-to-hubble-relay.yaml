@@ -1,0 +1,17 @@
+# Hubble ui access to hubble relay
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hubble-ui.egress.to.local.hubble-relay
+  namespace: cilium-ns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:k8s-app: hubble-ui
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:k8s-app: hubble-relay
+      toPorts:
+        - ports:
+            - port: "4245"

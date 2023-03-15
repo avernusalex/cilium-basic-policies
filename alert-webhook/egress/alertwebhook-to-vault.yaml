@@ -1,0 +1,25 @@
+# Policy to access external vault
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: alertwebhook.egress.to.external.vault
+  namespace: vmalert-ns
+  annotations:
+    helm.sh/hook: "pre-install,pre-upgrade"
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: alertwebhook
+  egress:
+    - toCIDRSet:
+        - cidr: 10.20.30.40/32 # vault1
+      toPorts:
+        - ports:
+            - port: "8200"
+              protocol: TCP
+    - toFQDNs: #vault2
+        - matchName: vault.server.com
+      toPorts:
+        - ports:
+            - port: "8200"
+              protocol: TCP

@@ -1,3 +1,4 @@
+# Coredns answers to any pod in cluster
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:

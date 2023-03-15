@@ -1,4 +1,6 @@
-# Basic coredns ingress from clusterwide
+# Example of using resolving rule patterns
+# In this case resolving only accepted for *.svc.local
+# You can change it to any pattern, like *.mycompany.internal, *.com, etc
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -15,6 +17,7 @@ spec:
       toPorts:
         - ports:
           - port: "53"
-            protocol: TCP
-          - port: "53"
-            protocol: UDP
+            protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*.cluster.local"

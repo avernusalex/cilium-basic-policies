@@ -1,0 +1,24 @@
+# Rules for clustermesh server
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: clustermesh.egress.to.local.clustermesh
+  namespace: cilium-ns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:k8s-app: clustermesh-apiserver
+  egress:
+    - toEntities:
+        - remote-node
+        - host
+      toPorts:
+        - ports:
+            - port: "6443"
+              protocol: TCP
+    - toCIDRSet:
+        - cidr: 10.20.30.40/32
+      toPorts:
+        - ports:
+            - port: "6443"
+              protocol: TCP

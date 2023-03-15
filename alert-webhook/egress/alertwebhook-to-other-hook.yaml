@@ -1,0 +1,20 @@
+# To access external webhooks
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: alertwebhook.egress.to.external.webhook
+  namespace: vmalert-ns
+  annotations:
+    helm.sh/hook: "pre-install,pre-upgrade"
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: alertwebhook
+  egress:
+  - toCIDRSet:
+      - cidr: 10.20.30.40/32
+      - cidr: 192.193.194.195/32
+    toPorts:
+      - ports:
+          - port: "443"
+            protocol: TCP

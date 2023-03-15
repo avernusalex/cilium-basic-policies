@@ -1,0 +1,30 @@
+# Policy for hubble ui to access kube-apiserver
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hubble-ui.egress.to.local.kube-apiserver
+  namespace: cilium-ns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:k8s-app: hubble-ui
+  egress:
+    - toEndpoints:
+      - matchLabels:
+          reserved:remote-node: ""
+          reserved:kube-apiserver: ""
+          reserved:host: ""
+      toPorts:
+        - ports:
+          - port: "6443"
+            protocol: TCP
+          - port: "443"
+            protocol: TCP
+    # We use load balancers before kubeapi with virtual ips
+    # So we need to let hubble go with virtual addrress also
+    - toCIDRSet:
+        - cidr: 10.20.30.40/32
+      toPorts:
+      - ports:
+        - port: "6443"
+          protocol: TCP

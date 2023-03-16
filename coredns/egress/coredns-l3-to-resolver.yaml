@@ -1,0 +1,22 @@
+# Coredns access to resolvers
+# Change Google DNS to any your resolver address
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: coredns.egress.to.resolvers
+  namespace: coredns-ns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: coredns
+      k8s:io.kubernetes.pod.namespace: coredns-n
+  egress:
+  - toCIDRSet:
+      - cidr: 8.8.8.8/32
+      - cidr: 8.8.4.4/32
+    toPorts:
+      - ports:
+        - port: "53"
+          protocol: UDP
+        - port: "53"
+          protocol: TCP

@@ -1,0 +1,18 @@
+# Coredns answers to any pod in cluster
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: coredns.egress.from.cluster
+spec:
+  endpointSelector: {}
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:app.kubernetes.io/name: coredns
+        k8s:io.kubernetes.pod.namespace: dns-ns
+    toPorts:
+      - ports:
+        - port: "53"
+          protocol: UDP
+        - port: "53"
+          protocol: TCP

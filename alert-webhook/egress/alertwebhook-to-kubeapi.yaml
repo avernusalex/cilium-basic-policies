@@ -1,0 +1,34 @@
+# Alertwebhhok access to kube-apiserver
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: alertwebhook.egress.to.local.kube-apiserver
+  namespace: vmalert-ns
+  annotations:
+    helm.sh/hook: "pre-install,pre-upgrade"
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: alertwebhook
+  egress:
+    - toEndpoints:
+      - matchLabels:
+          reserved:remote-node: ""
+          reserved:host: ""
+      toPorts:
+        - ports:
+          - port: "6443"
+            protocol: TCP
+    - toEndpoints:
+      - matchLabels:
+          reserved:kube-apiserver: ""
+      toPorts:
+        - ports:
+          - port: "443"
+            protocol: TCP
+    - toCIDRSet:
+        - cidr: 10.20.30.40/32
+      toPorts:
+      - ports:
+        - port: "6443"
+          protocol: TCP

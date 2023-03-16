@@ -1,0 +1,18 @@
+# Allows you to access hubble ui interface via ingress controller
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hubble-ui.ingress.from.local.ingress-controller
+  namespace: cilium-ns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: hubble-ui
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: ingressgateway
+            io.kubernetes.pod.namespace: ingress-ns
+      toPorts:
+        - ports:
+            - port: "8081"

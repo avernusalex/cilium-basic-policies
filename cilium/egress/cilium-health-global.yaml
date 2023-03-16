@@ -1,0 +1,17 @@
+# Entity world is used for multicluster workloads
+# You can use only cluster if you do not use mesh
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: cluster-cilium-health
+spec:
+  egress:
+  - toEntities:
+    - world
+  endpointSelector:
+    matchLabels:
+      reserved:health: ""
+  ingress:
+  - fromEntities:
+    - cluster
+    - world

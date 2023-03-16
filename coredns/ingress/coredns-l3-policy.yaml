@@ -1,0 +1,20 @@
+# Basic coredns ingress from clusterwide
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: coredns.ingress.from.cluster
+  namespace: coredns-ns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: coredns
+      k8s:io.kubernetes.pod.namespace: coredns-ns
+  ingress:
+    - fromEntities:
+        - cluster
+      toPorts:
+        - ports:
+          - port: "53"
+            protocol: TCP
+          - port: "53"
+            protocol: UDP

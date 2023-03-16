@@ -1,0 +1,19 @@
+# Access for clustermesh
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: clustermesh.ingress.from.local.clustermesh
+  namespace: cilium-ns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:k8s-app: clustermesh-apiserver
+  ingress:
+    - fromEntities:
+        - remote-node
+        - host
+        - world
+      toPorts:
+        - ports:
+            - port: "2379"
+              protocol: TCP
